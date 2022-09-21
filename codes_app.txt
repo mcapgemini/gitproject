@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+import dataiku
+import pandas as pd, numpy as np
+from dataiku import pandasutils as pdu
+import sklearn.linear_model as sk
+
+# from pandas_profiling import ProfileReport
+import sklearn
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+import lightgbm as lgb
+import sklearn.metrics
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedStratifiedKFold
+# import optuna
+from lightgbm import early_stopping
+
+# from fairlearn.metrics import MetricFrame
+# from fairlearn.metrics import selection_rate
+
+from sklearn.metrics import classification_report
+# from sklearn.inspection import plot_partial_dependence
+# from sklearn.inspection import permutation_importance
+# from sklearn.inspection import partial_dependence
+# import shap
+
+import matplotlib.pyplot as plt
+import seaborn as sn
+import pandas as pd
+import numpy as np
+from sklearn import preprocessing
+import matplotlib.pyplot as plt 
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+# from sklearn.model_selection import train_te
+
+# Read recipe inputs
+insurance_training_data = dataiku.Dataset("insurance_training_data")
+df = insurance_training_data.get_dataframe()
+
+x = df.loc[:,['no_claims','age_of_car','age_of_driver','insurance_group','channel_codes']].values
+y = df.loc[:,['renewal']].values
+
+x_train, x_test, y_train, y_test= train_test_split(x, y, test_size= 0.20, random_state=0)  
+st_x= StandardScaler()   
+# st_x = RobustScaler()
+x_train= st_x.fit_transform(x_train)    
+x_test= st_x.transform(x_test)
+
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
+logreg = LogisticRegression()
+
+result = pd.DataFrame(y_pred)
+
+# Write recipe outputs
+Custom_Model_Classification = dataiku.Dataset("Custom_Model_Classification")
+Custom_Model_Classification.write_with_schema(result)
